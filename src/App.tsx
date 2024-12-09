@@ -1,56 +1,56 @@
-import React, { useState } from 'react';
-import { Upload, Send, FileCheck, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import { Upload, Send, FileCheck, AlertCircle } from "lucide-react";
 
 interface ApiResponse {
   status: string;
   message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;
 }
 
 function App() {
-  const [industry, setIndustry] = useState<string>('');
+  const [industry, setIndustry] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setError('');
+      setError("");
     }
   };
 
   const handleSubmit = async () => {
     if (!industry) {
-      setError('Please select an industry');
+      setError("Please select an industry");
       return;
     }
     if (!file) {
-      setError('Please upload a document');
+      setError("Please upload a document");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     const formData = new FormData();
-    formData.append('industry', industry);
-    formData.append('document', file);
+    formData.append("industry", industry);
+    formData.append("document", file);
 
     try {
       // Replace with your actual API endpoint
-      const response = await fetch('https://api.example.com/process', {
-        method: 'POST',
-        body: formData,
+      const response = await fetch("http://localhost:3000/llm", {
+        method: "GET",
       });
 
       const data = await response.json();
       setResponse(data);
     } catch (err) {
-      setError('Failed to process the document. Please try again.');
-      console.error('API Error:', err);
+      setError("Failed to process the document. Please try again.");
+      console.error("API Error:", err);
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,10 @@ function App() {
           <div className="space-y-6">
             {/* Industry Selection */}
             <div>
-              <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="industry"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Industry
               </label>
               <select
@@ -92,7 +95,10 @@ function App() {
                 <div className="space-y-2 text-center">
                   <Upload className="mx-auto h-12 w-12 text-gray-400" />
                   <div className="flex text-sm text-gray-600">
-                    <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                    >
                       <span>Upload a file</span>
                       <input
                         id="file-upload"
@@ -105,7 +111,7 @@ function App() {
                     <p className="pl-1">or drag and drop</p>
                   </div>
                   <p className="text-xs text-gray-500">
-                    {file ? file.name : 'PDF, DOC up to 10MB'}
+                    {file ? file.name : "PDF, DOC up to 10MB"}
                   </p>
                 </div>
               </div>
@@ -143,7 +149,9 @@ function App() {
               <div className="mt-6 bg-gray-50 rounded-lg p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <FileCheck className="h-6 w-6 text-green-500" />
-                  <h2 className="text-xl font-semibold text-gray-900">Response</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Response
+                  </h2>
                 </div>
                 <pre className="bg-white p-4 rounded-md overflow-auto max-h-60 text-sm">
                   {JSON.stringify(response, null, 2)}
